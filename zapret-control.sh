@@ -1,157 +1,215 @@
 #!/bin/bash
 
-# Цвета для интерфейса
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-CYAN='\033[0;36m'
+# ═══════════════════════════════════════════════════════════════════
+#  ZAPRET CONTROL PANEL - DPI BYPASS MANAGER
+#  Monochrome Edition | Cyberpunk Style
+# ═══════════════════════════════════════════════════════════════════
+
+set -e
+
+# ANSI Colors - Monochrome Theme
+BLACK='\033[0;30m'
 WHITE='\033[1;37m'
 GRAY='\033[0;90m'
+BRIGHT='\033[1;97m'
+DIM='\033[2;37m'
+BOLD='\033[1m'
 NC='\033[0m'
 
 ZAPRET_DIR="/opt/zapret.installer"
-CONFIG_DIR="$ZAPRET_DIR/config"
+PROFILE_DIR="$ZAPRET_DIR/profiles"
+LIST_DIR="$ZAPRET_DIR/lists"
 
-clear
+# ═══════════════════════════════════════════════════════════════════
+# UI FUNCTIONS
+# ═══════════════════════════════════════════════════════════════════
 
-echo -e "${MAGENTA}"
-echo "██╗   ██╗ █████╗ ███╗   ██╗███████╗ █████╗ ██╗      ██████╗ ███╗   ███╗ ██████╗ ██████╗  █████╗ "
-echo "╚██╗ ██╔╝██╔══██╗████╗  ██║██╔════╝██╔══██╗██║     ██╔═══██╗████╗ ████║██╔═══██╗██╔══██╗██╔══██╗"
-echo " ╚████╔╝ ███████║██╔██╗ ██║█████╗  ███████║██║     ██║   ██║██╔████╔██║██║   ██║██████╔╝███████║"
-echo "  ╚██╔╝  ██╔══██║██║╚██╗██║██╔══╝  ██╔══██║██║     ██║   ██║██║╚██╔╝██║██║   ██║██╔══██╗██╔══██║"
-echo "   ██║   ██║  ██║██║ ╚████║███████╗██║  ██║███████╗╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██║  ██║██║  ██║"
-echo "   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝"
-echo -e "${NC}"
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${WHITE}                    Zapret Control Panel - DPI Bypass Solution${NC}"
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo
-
-show_menu() {
-    echo -e "${YELLOW}┌─ ОСНОВНОЕ МЕНЮ${NC}"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}├─${NC} ${GREEN}[1]${NC} Установить Zapret"
-    echo -e "${GRAY}├─${NC} ${GREEN}[2]${NC} Запустить Zapret"
-    echo -e "${GRAY}├─${NC} ${RED}[3]${NC} Остановить Zapret"
-    echo -e "${GRAY}├─${NC} ${CYAN}[4]${NC} Статус Zapret"
-    echo -e "${GRAY}├─${NC} ${BLUE}[5]${NC} Применить готовую стратегию"
-    echo -e "${GRAY}├─${NC} ${MAGENTA}[6]${NC} Настроить вручную"
-    echo -e "${GRAY}├─${NC} ${YELLOW}[7]${NC} Обновить Zapret"
-    echo -e "${GRAY}├─${NC} ${RED}[8]${NC} Удалить Zapret"
-    echo -e "${GRAY}├─${NC} ${WHITE}[0]${NC} Выход"
-    echo -e "${GRAY}└─${NC}"
-    echo
-    echo -ne "${CYAN}╰─ Выберите действие:${NC} "
-}
-
-show_strategies() {
+show_header() {
     clear
-    echo -e "${MAGENTA}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${WHITE}                          ГОТОВЫЕ СТРАТЕГИИ ДЛЯ ПРОВАЙДЕРОВ${NC}"
-    echo -e "${MAGENTA}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BRIGHT}"
+    echo "    ███████╗ █████╗ ██████╗ ██████╗ ███████╗████████╗"
+    echo "    ╚══███╔╝██╔══██╗██╔══██╗██╔══██╗██╔════╝╚══██╔══╝"
+    echo "      ███╔╝ ███████║██████╔╝██████╔╝█████╗     ██║   "
+    echo "     ███╔╝  ██╔══██║██╔═══╝ ██╔══██╗██╔══╝     ██║   "
+    echo "    ███████╗██║  ██║██║     ██║  ██║███████╗   ██║   "
+    echo "    ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   "
+    echo -e "${NC}"
+    echo -e "${DIM}    ══════════════════════════════════════════════════${NC}"
+    echo -e "${GRAY}           DPI Bypass Control Panel v2.0${NC}"
+    echo -e "${DIM}    ══════════════════════════════════════════════════${NC}"
     echo
-    echo -e "${YELLOW}┌─ Провайдеры России${NC}"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}├─${NC} ${GREEN}[1]${NC}  МТС (Moscow, regions)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[2]${NC}  Билайн (Beeline, VPN friendly)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[3]${NC}  Мегафон (Megafon, strict DPI)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[4]${NC}  Ростелеком (Rostelecom, universal)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[5]${NC}  Дом.ру (Dom.ru, mild filtering)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[6]${NC}  МГТС (MGTS Moscow, aggressive)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[7]${NC}  Yota (mobile optimized)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[8]${NC}  Tele2 (mobile strict)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[9]${NC}  TTK (TransTelecom)"
-    echo -e "${GRAY}├─${NC} ${GREEN}[10]${NC} ЭР-Телеком (provider alliance)"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${YELLOW}├─ Сервисы${NC}"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}├─${NC} ${BLUE}[11]${NC} YouTube (HD streaming)"
-    echo -e "${GRAY}├─${NC} ${BLUE}[12]${NC} Discord (voice + video)"
-    echo -e "${GRAY}├─${NC} ${BLUE}[13]${NC} Twitter/X (full access)"
-    echo -e "${GRAY}├─${NC} ${BLUE}[14]${NC} Instagram + Facebook"
-    echo -e "${GRAY}├─${NC} ${BLUE}[15]${NC} Telegram (web version)"
-    echo -e "${GRAY}├─${NC} ${BLUE}[16]${NC} Spotify (streaming)"
-    echo -e "${GRAY}├─${NC} ${BLUE}[17]${NC} Netflix + Prime Video"
-    echo -e "${GRAY}├─${NC} ${BLUE}[18]${NC} GitHub + GitLab"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${YELLOW}├─ Регионы${NC}"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}├─${NC} ${CYAN}[19]${NC} Москва (агрессивная фильтрация)"
-    echo -e "${GRAY}├─${NC} ${CYAN}[20]${NC} Санкт-Петербург (средняя)"
-    echo -e "${GRAY}├─${NC} ${CYAN}[21]${NC} Екатеринбург (мягкая)"
-    echo -e "${GRAY}├─${NC} ${CYAN}[22]${NC} Новосибирск (средняя)"
-    echo -e "${GRAY}├─${NC} ${CYAN}[23]${NC} Краснодар (агрессивная)"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${YELLOW}├─ Универсальные${NC}"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}├─${NC} ${MAGENTA}[24]${NC} Универсальная (все сайты)"
-    echo -e "${GRAY}├─${NC} ${MAGENTA}[25]${NC} Агрессивная (макс. обход)"
-    echo -e "${GRAY}├─${NC} ${MAGENTA}[26]${NC} Безопасная (минимум модификаций)"
-    echo -e "${GRAY}├─${NC} ${MAGENTA}[27]${NC} VPN Режим (обход детекта)"
-    echo -e "${GRAY}│${NC}"
-    echo -e "${GRAY}└─${NC} ${WHITE}[0]${NC} Назад"
-    echo
-    echo -ne "${CYAN}╰─ Выберите стратегию:${NC} "
 }
 
-apply_strategy() {
-    case $1 in
-        1) echo "--dpi-desync=fake,split2 --dpi-desync-ttl=6 --dpi-desync-fooling=badsum" > "$CONFIG_DIR/strategy.conf" ;;
-        2) echo "--dpi-desync=fake --dpi-desync-ttl=4 --dpi-desync-autottl=2" > "$CONFIG_DIR/strategy.conf" ;;
-        3) echo "--dpi-desync=split --dpi-desync-split-pos=2 --dpi-desync-ttl=8" > "$CONFIG_DIR/strategy.conf" ;;
-        4) echo "--dpi-desync=fake,disorder2 --dpi-desync-ttl=5 --dpi-desync-fooling=md5sig" > "$CONFIG_DIR/strategy.conf" ;;
-        5) echo "--dpi-desync=fake --dpi-desync-ttl=3 --dpi-desync-autottl=1" > "$CONFIG_DIR/strategy.conf" ;;
-        6) echo "--dpi-desync=split2 --dpi-desync-split-pos=1 --dpi-desync-ttl=10 --dpi-desync-fooling=badsum" > "$CONFIG_DIR/strategy.conf" ;;
-        7) echo "--dpi-desync=fake --dpi-desync-ttl=4 --dpi-desync-autottl" > "$CONFIG_DIR/strategy.conf" ;;
-        8) echo "--dpi-desync=split --dpi-desync-split-pos=3 --dpi-desync-ttl=7" > "$CONFIG_DIR/strategy.conf" ;;
-        9) echo "--dpi-desync=fake,split --dpi-desync-ttl=5" > "$CONFIG_DIR/strategy.conf" ;;
-        10) echo "--dpi-desync=fake --dpi-desync-ttl=6 --dpi-desync-fooling=badseq" > "$CONFIG_DIR/strategy.conf" ;;
-        11) echo "--dpi-desync=split2 --dpi-desync-split-pos=2 --hostlist=$ZAPRET_DIR/lists/youtube.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        12) echo "--dpi-desync=fake,split --dpi-desync-ttl=6 --hostlist=$ZAPRET_DIR/lists/discord.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        13) echo "--dpi-desync=fake --dpi-desync-ttl=5 --hostlist=$ZAPRET_DIR/lists/twitter.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        14) echo "--dpi-desync=split --dpi-desync-split-pos=3 --hostlist=$ZAPRET_DIR/lists/facebook.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        15) echo "--dpi-desync=fake,split2 --hostlist=$ZAPRET_DIR/lists/telegram.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        16) echo "--dpi-desync=fake --dpi-desync-ttl=4 --hostlist=$ZAPRET_DIR/lists/spotify.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        17) echo "--dpi-desync=split2 --dpi-desync-split-pos=2 --hostlist=$ZAPRET_DIR/lists/streaming.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        18) echo "--dpi-desync=fake --hostlist=$ZAPRET_DIR/lists/dev.txt" > "$CONFIG_DIR/strategy.conf" ;;
-        19) echo "--dpi-desync=split2,fake --dpi-desync-ttl=8 --dpi-desync-fooling=badsum,md5sig" > "$CONFIG_DIR/strategy.conf" ;;
-        20) echo "--dpi-desync=fake,split --dpi-desync-ttl=6" > "$CONFIG_DIR/strategy.conf" ;;
-        21) echo "--dpi-desync=fake --dpi-desync-ttl=4" > "$CONFIG_DIR/strategy.conf" ;;
-        22) echo "--dpi-desync=split --dpi-desync-split-pos=2 --dpi-desync-ttl=5" > "$CONFIG_DIR/strategy.conf" ;;
-        23) echo "--dpi-desync=fake,disorder --dpi-desync-ttl=7 --dpi-desync-fooling=badsum" > "$CONFIG_DIR/strategy.conf" ;;
-        24) echo "--dpi-desync=fake,split2 --dpi-desync-ttl=6" > "$CONFIG_DIR/strategy.conf" ;;
-        25) echo "--dpi-desync=split2,disorder2,fake --dpi-desync-ttl=10 --dpi-desync-fooling=badsum,md5sig,ts" > "$CONFIG_DIR/strategy.conf" ;;
-        26) echo "--dpi-desync=fake --dpi-desync-ttl=3" > "$CONFIG_DIR/strategy.conf" ;;
-        27) echo "--dpi-desync=fake,split --dpi-desync-any-protocol --dpi-desync-ttl=5" > "$CONFIG_DIR/strategy.conf" ;;
-        *) echo -e "${RED}✗ Неверный выбор${NC}"; return 1 ;;
+show_main_menu() {
+    echo -e "${WHITE}┌─ MAIN MENU${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[1]${NC} Install Zapret"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[2]${NC} Start Service"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[3]${NC} Stop Service"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[4]${NC} Service Status"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[5]${NC} Apply Profile ►"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[6]${NC} Manual Config"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[7]${NC} Update Zapret"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[8]${NC} Uninstall"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}└──${NC} ${DIM}[0] Exit${NC}"
+    echo
+    echo -ne "${GRAY}>>> ${NC}"
+}
+
+show_profiles() {
+    show_header
+    echo -e "${WHITE}┌─ ISP PROFILES${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[1]${NC}  МТС ${DIM}(Moscow)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[2]${NC}  Beeline ${DIM}(VPN-friendly)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[3]${NC}  Megafon ${DIM}(strict)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[4]${NC}  Rostelecom ${DIM}(universal)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[5]${NC}  Dom.ru ${DIM}(mild)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[6]${NC}  МГТС ${DIM}(aggressive)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[7]${NC}  Yota ${DIM}(mobile)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[8]${NC}  Tele2 ${DIM}(mobile strict)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[9]${NC}  TTK ${DIM}(TransTelecom)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[10]${NC} ER-Telecom${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${WHITE}├─ SERVICE PROFILES${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[11]${NC} YouTube ${DIM}(HD streaming)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[12]${NC} Discord ${DIM}(voice+video)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[13]${NC} Twitter/X ${DIM}(full)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[14]${NC} Instagram+FB${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[15]${NC} Telegram ${DIM}(web)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[16]${NC} Spotify${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[17]${NC} Netflix+Prime${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[18]${NC} GitHub+GitLab${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${WHITE}├─ REGIONAL PROFILES${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[19]${NC} Moscow ${DIM}(aggressive)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[20]${NC} St.Petersburg ${DIM}(medium)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[21]${NC} Ekaterinburg ${DIM}(mild)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[22]${NC} Novosibirsk${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[23]${NC} Krasnodar${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${WHITE}├─ UNIVERSAL${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[24]${NC} Universal ${DIM}(all sites)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[25]${NC} Aggressive ${DIM}(max bypass)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[26]${NC} Safe ${DIM}(minimal mods)${NC}"
+    echo -e "${GRAY}├──${NC} ${BRIGHT}[27]${NC} VPN Mode ${DIM}(detect bypass)${NC}"
+    echo -e "${GRAY}│${NC}"
+    echo -e "${GRAY}└──${NC} ${DIM}[0] Back${NC}"
+    echo
+    echo -ne "${GRAY}>>> ${NC}"
+}
+
+apply_profile() {
+    local profile_id=$1
+    local profile_file=""
+    
+    case $profile_id in
+        1) profile_file="mts.conf" ;;
+        2) profile_file="beeline.conf" ;;
+        3) profile_file="megafon.conf" ;;
+        6) profile_file="mgts.conf" ;;
+        11) profile_file="youtube.conf" ;;
+        12) profile_file="discord.conf" ;;
+        *)
+            echo -e "${GRAY}[!] Profile not found. Creating temporary config...${NC}"
+            create_temp_profile $profile_id
+            return
+            ;;
     esac
-    echo -e "${GREEN}✓ Стратегия применена успешно!${NC}"
+    
+    if [ -f "$PROFILE_DIR/$profile_file" ]; then
+        sudo cp "$PROFILE_DIR/$profile_file" "$ZAPRET_DIR/config/config"
+        echo -e "${BRIGHT}[✓] Profile applied: $profile_file${NC}"
+    else
+        echo -e "${GRAY}[✗] Profile file not found${NC}"
+    fi
     sleep 2
 }
 
+create_temp_profile() {
+    case $1 in
+        4) echo 'NFQWS_OPT="--dpi-desync=fake,disorder2 --dpi-desync-ttl=5"' ;;
+        5) echo 'NFQWS_OPT="--dpi-desync=fake --dpi-desync-ttl=3"' ;;
+        7) echo 'NFQWS_OPT="--dpi-desync=fake --dpi-desync-ttl=4"' ;;
+        8) echo 'NFQWS_OPT="--dpi-desync=split --dpi-desync-split-pos=3"' ;;
+        9) echo 'NFQWS_OPT="--dpi-desync=fake,split --dpi-desync-ttl=5"' ;;
+        10) echo 'NFQWS_OPT="--dpi-desync=fake --dpi-desync-ttl=6"' ;;
+        24) echo 'NFQWS_OPT="--dpi-desync=fake,split2 --dpi-desync-ttl=6"' ;;
+        25) echo 'NFQWS_OPT="--dpi-desync=split2,disorder2,fake --dpi-desync-ttl=10"' ;;
+        26) echo 'NFQWS_OPT="--dpi-desync=fake --dpi-desync-ttl=3"' ;;
+        27) echo 'NFQWS_OPT="--dpi-desync=fake,split --dpi-desync-any-protocol"' ;;
+    esac | sudo tee "$ZAPRET_DIR/config/config" > /dev/null
+}
+
+install_zapret() {
+    echo -e "${BRIGHT}[*] Installing Zapret...${NC}"
+    if [ -d "$ZAPRET_DIR" ]; then
+        echo -e "${GRAY}[!] Zapret already installed${NC}"
+    else
+        sudo git clone https://github.com/bol-van/zapret.git "$ZAPRET_DIR"
+        sudo mkdir -p "$ZAPRET_DIR/config"
+        echo -e "${BRIGHT}[✓] Installation complete${NC}"
+    fi
+    sleep 2
+}
+
+start_service() {
+    echo -e "${BRIGHT}[*] Starting Zapret service...${NC}"
+    if systemctl is-active --quiet zapret 2>/dev/null; then
+        echo -e "${GRAY}[!] Service already running${NC}"
+    else
+        sudo systemctl start zapret 2>/dev/null || echo -e "${GRAY}[!] Service not configured${NC}"
+        echo -e "${BRIGHT}[✓] Service started${NC}"
+    fi
+    sleep 2
+}
+
+stop_service() {
+    echo -e "${BRIGHT}[*] Stopping Zapret service...${NC}"
+    sudo systemctl stop zapret 2>/dev/null || echo -e "${GRAY}[!] Service not running${NC}"
+    echo -e "${BRIGHT}[✓] Service stopped${NC}"
+    sleep 2
+}
+
+check_status() {
+    echo -e "${BRIGHT}[*] Checking service status...${NC}"
+    echo
+    if systemctl is-active --quiet zapret 2>/dev/null; then
+        echo -e "${BRIGHT}Status:${NC} ${BRIGHT}ACTIVE${NC}"
+    else
+        echo -e "${GRAY}Status: INACTIVE${NC}"
+    fi
+    echo
+    read -p "Press Enter to continue..."
+}
+
+# ═══════════════════════════════════════════════════════════════════
+# MAIN LOOP
+# ═══════════════════════════════════════════════════════════════════
+
 while true; do
-    clear
-    show_menu
+    show_header
+    show_main_menu
     read -r choice
     
     case $choice in
-        1) echo -e "${GREEN}Установка Zapret...${NC}" ;;
-        2) echo -e "${GREEN}Запуск Zapret...${NC}" ;;
-        3) echo -e "${RED}Остановка Zapret...${NC}" ;;
-        4) echo -e "${CYAN}Проверка статуса...${NC}" ;;
-        5) 
-            show_strategies
-            read -r strategy_choice
-            if [ "$strategy_choice" != "0" ]; then
-                apply_strategy "$strategy_choice"
-            fi
+        1) install_zapret ;;
+        2) start_service ;;
+        3) stop_service ;;
+        4) check_status ;;
+        5)
+            show_profiles
+            read -r profile_choice
+            [ "$profile_choice" != "0" ] && apply_profile "$profile_choice"
             ;;
-        6) echo -e "${MAGENTA}Ручная настройка...${NC}" ;;
-        7) echo -e "${YELLOW}Обновление Zapret...${NC}" ;;
-        8) echo -e "${RED}Удаление Zapret...${NC}" ;;
-        0) echo -e "${WHITE}Выход...${NC}"; exit 0 ;;
-        *) echo -e "${RED}✗ Неверный выбор. Попробуйте снова.${NC}"; sleep 2 ;;
+        6) echo -e "${GRAY}[!] Manual config - edit $ZAPRET_DIR/config/config${NC}"; sleep 2 ;;
+        7) echo -e "${BRIGHT}[*] Updating...${NC}"; cd "$ZAPRET_DIR" && sudo git pull; sleep 2 ;;
+        8) echo -e "${GRAY}[!] Uninstall: sudo rm -rf $ZAPRET_DIR${NC}"; sleep 2 ;;
+        0) echo -e "${DIM}Goodbye.${NC}"; exit 0 ;;
+        *) echo -e "${GRAY}[✗] Invalid choice${NC}"; sleep 1 ;;
     esac
 done
